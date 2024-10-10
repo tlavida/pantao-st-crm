@@ -1,4 +1,4 @@
-package pantao_st_crm.com.pantao;
+package com.pantao_st_crm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

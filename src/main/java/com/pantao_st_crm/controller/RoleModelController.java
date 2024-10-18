@@ -1,6 +1,6 @@
 package com.pantao_st_crm.controller;
 
-import com.pantao_st_crm.entity.RoleModel;
+import com.pantao_st_crm.dto.RoleModelDTO;
 import com.pantao_st_crm.service.RoleModelServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +22,12 @@ public class RoleModelController {
     }
 
     @GetMapping
-    public List<RoleModel> getAll() {
+    public List<RoleModelDTO> getAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<RoleModel> getById(@PathVariable Long id) {
+    public Optional<RoleModelDTO> getById(@PathVariable Long id) {
         return service.findById(id);
     }
 }

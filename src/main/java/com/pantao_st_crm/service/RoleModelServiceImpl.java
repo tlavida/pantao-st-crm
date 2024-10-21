@@ -13,26 +13,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoleModelServiceImpl implements RoleModelService{
-    private final RoleModelRepository repository;
+    private final RoleModelRepository roleModelRepository;
 
     @Autowired
     public RoleModelServiceImpl(RoleModelRepository repository) {
-        this.repository = repository;
+        this.roleModelRepository = repository;
     }
 
     @Override
     public RoleModel findByName(String name) {
-        return repository.findByName(name);
+        return roleModelRepository.findByName(name);
     }
 
     @Override
     public Optional<RoleModelDTO> findById(Long id) {
-        return repository.findById(id).map(ToDTO::toDTORole);
+        return roleModelRepository.findById(id).map(ToDTO::toDTORole);
     }
 
     @Override
     public List<RoleModelDTO> findAll() {
-        return repository.findAll().stream()
+        return roleModelRepository.findAll().stream()
                 .map(ToDTO::toDTORole)
                 .collect(Collectors.toList());
     }

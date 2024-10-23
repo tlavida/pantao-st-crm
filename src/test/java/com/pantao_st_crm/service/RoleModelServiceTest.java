@@ -1,7 +1,9 @@
 package com.pantao_st_crm.service;
 
 import com.pantao_st_crm.dto.RoleModelDTO;
+import com.pantao_st_crm.entity.Employee;
 import com.pantao_st_crm.entity.RoleModel;
+import com.pantao_st_crm.repository.EmployeeRepository;
 import com.pantao_st_crm.repository.RoleModelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +23,15 @@ class RoleModelServiceTest {
     @Autowired
     RoleModelService roleModelService;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
+
     private Long adminRoleId; // Переменная для хранения id роли admin
 
     @BeforeEach
     public void setUp() {
         // Перед каждым тестом очищаем базу и загружаем тестовые данные
+        employeeRepository.deleteAll();
         roleModelRepository.deleteAll();
 
         // Добавляем тестовые данные в базу

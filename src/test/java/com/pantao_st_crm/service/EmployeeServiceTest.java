@@ -3,6 +3,8 @@ package com.pantao_st_crm.service;
 import com.pantao_st_crm.dto.EmployeeDTO;
 import com.pantao_st_crm.entity.Employee;
 import com.pantao_st_crm.entity.RoleModel;
+import com.pantao_st_crm.exception.CustomEntityNotFoundException;
+import com.pantao_st_crm.exception.EmployeeAlreadyExistsException;
 import com.pantao_st_crm.repository.EmployeeRepository;
 import com.pantao_st_crm.repository.RoleModelRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,20 +32,25 @@ class EmployeeServiceTest {
     @BeforeEach
     public void setUp() {
         employeeRepository.deleteAll();
+        roleModelRepository.deleteAll();
 
+        // Сохраняем роль в базу данных
         RoleModel roleModel = RoleModel.builder()
                 .name("admin")
                 .description("Admin role")
                 .build();
 
+        roleModel = roleModelRepository.save(roleModel); // Сохраняем и получаем обновлённую сущность
+
+        // Сохраняем сотрудника с только что сохранённой ролью
         Employee employee = Employee.builder()
                 .fio("Петров П. П.")
                 .role(roleModel)
                 .build();
 
-        roleModelRepository.save(roleModel);
-        employeeRepository.save(employee);
+        employee = employeeRepository.save(employee); // Сохраняем и обновляем сущность
 
+        // Сохраняем ID сотрудника для использования в тестах
         employeeId = employee.getId();
     }
 
@@ -71,21 +78,19 @@ class EmployeeServiceTest {
 
     @Test
     void findById() {
-        Optional<EmployeeDTO> employeeDTO = employeeService.findById(employeeId);
+        EmployeeDTO employeeDTO = employeeService.findById(employeeId);
 
-        assertTrue(employeeDTO.isPresent());
-        assertEquals(employeeId, employeeDTO.get().getId());
-        assertEquals("Петров П. П.", employeeDTO.get().getFio());
-        assertEquals("admin", employeeDTO.get().getRole());
+        assertNotNull(employeeDTO);
+        assertEquals(employeeId, employeeDTO.getId());
+        assertEquals("Петров П. П.", employeeDTO.getFio());
+        assertEquals("admin", employeeDTO.getRole());
     }
 
     @Test
     void findById_empty() {
-        // Ищем несуществующего сотрудника с id = 900L
-        Optional<EmployeeDTO> employeeDTO = employeeService.findById(900L);
+        Long nonExistentId = 999L;
 
-        // Проверяем, что сотрудник не найден
-        assertFalse(employeeDTO.isPresent());
+        assertThrows(CustomEntityNotFoundException.class, () -> employeeService.findById(nonExistentId));
     }
 
     @Test
@@ -100,5 +105,40 @@ class EmployeeServiceTest {
 
         List<EmployeeDTO> employeeDTOS = employeeService.findAll();
         assertEquals(0, employeeDTOS.size());
+    }
+
+    @Test
+    void save_shouldThrowExceptionWhenEmployeeAlreadyExists() {
+        EmployeeDTO duplicateEmployeeDTO = EmployeeDTO.builder()
+                .fio("Петров П. П.") // Такое же имя, как у уже существующего сотрудника
+                .role("admin")
+                .build();
+
+        assertThrows(EmployeeAlreadyExistsException.class, () -> employeeService.save(duplicateEmployeeDTO));
+    }
+
+    @Test
+    void update() {
+        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+                .id(employeeId)
+                .fio("Обновленное ФИО Сотрудника")
+                .role("admin")
+                .build();
+
+        EmployeeDTO updatedEmployee = employeeService.update(employeeDTO);
+
+        assertNotNull(updatedEmployee);
+        assertEquals("Обновленное ФИО Сотрудника", updatedEmployee.getFio());
+    }
+
+    @Test
+    void update_shouldThrowExceptionWhenEmployeeNotFound() {
+        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+                .id(999L) // Несуществующий ID
+                .fio("Сотрудник не найден")
+                .role("admin")
+                .build();
+
+        assertThrows(CustomEntityNotFoundException.class, () -> employeeService.update(employeeDTO));
     }
 }

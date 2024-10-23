@@ -26,6 +26,6 @@ public class Employee {
     @Column(name = "fio", nullable = false)
     private String fio;
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id", nullable = false)
     private RoleModel role;
 }

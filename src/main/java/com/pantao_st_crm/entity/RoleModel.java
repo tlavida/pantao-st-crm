@@ -21,7 +21,7 @@ public class RoleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false, updatable = false)
+    @Column(name = "name", nullable = false, updatable = false, unique = true)
     private String name;
     @Column(name = "description")
     private String description;

@@ -7,6 +7,7 @@ import com.pantao_st_crm.repository.RoleModelRepository;
 import com.pantao_st_crm.util.mapper.ToDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class RoleModelServiceImpl implements RoleModelService{
     }
 
     @Override
+    @Transactional
     public RoleModel findByName(String name) {
         RoleModel role = roleModelRepository.findByName(name);
         if (role == null) {
@@ -30,6 +32,7 @@ public class RoleModelServiceImpl implements RoleModelService{
     }
 
     @Override
+    @Transactional
     public List<RoleModelDTO> findAll() {
         return roleModelRepository.findAll().stream()
                 .map(ToDTO::toDTORole)

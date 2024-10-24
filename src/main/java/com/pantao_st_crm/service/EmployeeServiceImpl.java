@@ -9,6 +9,7 @@ import com.pantao_st_crm.repository.EmployeeRepository;
 import com.pantao_st_crm.util.mapper.ToDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO save(EmployeeDTO employeeDTO) {
         // Проверяем, существует ли уже сотрудник с таким же именем (fio)
         if (employeeRepository.existsByFio(employeeDTO.getFio())) {
@@ -51,6 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO update(EmployeeDTO employeeDTO) {
         // Ищем сотрудника по ID
         Employee employee = employeeRepository.findById(employeeDTO.getId())
@@ -74,6 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
+    @Transactional
     public EmployeeDTO findById(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new CustomEntityNotFoundException(Employee.class));
@@ -81,6 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public List<EmployeeDTO> findAll() {
         return employeeRepository.findAll().stream()
                 .map(ToDTO::toDTOEmployee)

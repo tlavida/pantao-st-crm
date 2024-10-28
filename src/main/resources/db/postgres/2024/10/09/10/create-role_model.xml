@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="Lavida" id="employee-01">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="employee"/>
+            </not>
+        </preConditions>
+        <createTable remarks="Сотрудники" tableName="employee">
+            <column name="id" type="SERIAL" remarks="Идентификатор сотрудника">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="fio" type="VARCHAR(256)" remarks="ФИО сотрудника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT" remarks="Ссылка на роль сотрудника">
+                <constraints nullable="false" foreignKeyName="fk_role_model_id" references="role_model(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Lavida" id="add-admin-02">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(1) FROM employee;</sqlCheck>
+        </preConditions>
+        <sql splitStatements="true">
+            INSERT INTO employee(fio, role_id)
+            VALUES('Админ Админович Админ', (select id from role_model where name = 'admin' limit 1));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

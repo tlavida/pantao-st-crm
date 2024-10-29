@@ -16,7 +16,7 @@
             <column name="fio" type="VARCHAR(256)" remarks="ФИО сотрудника">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="BIGINT" remarks="Ссылка на роль сотрудника">
+            <column name="role_id" type="INTEGER" remarks="Ссылка на роль сотрудника">
                 <constraints nullable="false" foreignKeyName="fk_role_model_id" references="role_model(id)"/>
             </column>
         </createTable>

@@ -57,14 +57,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/employees").hasAnyRole("ADMIN", "DISPATCHER")
-                        .requestMatchers("/ui/employees/{id}").hasAnyRole("ADMIN", "DISPATCHER")
-                        .requestMatchers("/mobile/employees/{id}").hasAnyRole("ADMIN", "DISPATCHER")
+                        .requestMatchers("/employees").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
+                        .requestMatchers("/employees/{id}").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
                         .requestMatchers(HttpMethod.POST, "/employees").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/employees").hasRole("ADMIN")
                         .requestMatchers("/roles").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())

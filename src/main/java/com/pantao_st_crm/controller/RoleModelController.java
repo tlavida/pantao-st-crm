@@ -1,7 +1,7 @@
 package com.pantao_st_crm.controller;
 
 import com.pantao_st_crm.dto.RoleModelDTO;
-import com.pantao_st_crm.service.RoleModelServiceImpl;
+import com.pantao_st_crm.service.Impl.RoleModelServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -19,17 +19,20 @@
             <column name="role_id" type="INTEGER" remarks="Ссылка на роль сотрудника">
                 <constraints nullable="false" foreignKeyName="fk_role_model_id" references="role_model(id)"/>
             </column>
+            <column name="login" type="VARCHAR(50)" remarks="Логин сотрудника" />
+            <column name="password" type="VARCHAR(256)" remarks="Пароль сотрудника" />
         </createTable>
     </changeSet>
 
-    <changeSet author="Lavida" id="add-admin-02">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT COUNT(1) FROM employee;</sqlCheck>
-        </preConditions>
+    <changeSet author="Lavida" id="add-default-employees">
+        <!-- Добавляем сотрудников с логинами и зашифрованными паролями -->
         <sql splitStatements="true">
-            INSERT INTO employee(fio, role_id)
-            VALUES('Админ Админович Админ', (select id from role_model where name = 'admin' limit 1));
+            INSERT INTO employee (fio, role_id, login, password)
+            VALUES
+                ('Админ Админович Админ', (SELECT id FROM role_model WHERE name = 'admin' LIMIT 1), 'admin', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ='),
+                ('Менеджер Менеджерович', (SELECT id FROM role_model WHERE name = 'manager' LIMIT 1), 'manager', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ='),
+                ('Аналитик Аналитикович', (SELECT id FROM role_model WHERE name = 'analyst' LIMIT 1), 'analyst', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ='),
+                ('Оператор Операторович', (SELECT id FROM role_model WHERE name = 'operator' LIMIT 1), 'operator', 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=');
         </sql>
     </changeSet>
-
 </databaseChangeLog>

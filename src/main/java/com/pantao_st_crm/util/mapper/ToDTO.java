@@ -19,6 +19,7 @@ public class ToDTO {
                 .id(entity.getId())
                 .fio(entity.getFio())
                 .role(entity.getRole().getName())
+                .login(entity.getLogin())
                 .build();
     }
 }

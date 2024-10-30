@@ -23,8 +23,16 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "fio", nullable = false)
     private String fio;
+
+    @Column(name = "login", nullable = false)
+    private String login;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private RoleModel role;

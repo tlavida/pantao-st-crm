@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
@@ -28,10 +29,10 @@ public class SecurityConfig {
                         "FROM employee WHERE login=?"
         );
         manager.setAuthoritiesByUsernameQuery(
-                "select e.login, CONCAT('ROLE_', upper(rm.\"name\"))\n" +
-                        "  from employee e\n" +
-                        "  join role_model rm on e.role_id = rm.id\n" +
-                        " WHERE e.login=?"
+                "select e.login, CONCAT('ROLE_', upper(rm.\"name\")) " +
+                        "from employee e " +
+                        "join role_model rm on e.role_id = rm.id " +
+                        "WHERE e.login=?"
         );
         return manager;
     }
@@ -57,11 +58,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/employees").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
-                        .requestMatchers("/employees/{id}").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/employees").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/employees").hasRole("ADMIN")
-                        .requestMatchers("/roles").permitAll()
+                        // Конфигурация доступа для эндпоинтов сотрудников (employee)
+                        .requestMatchers(HttpMethod.GET, "/employee").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/employee/{id}").hasAnyRole("ADMIN", "ANALYST", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/employee/{id}").hasRole("ADMIN")
+
+                        // Конфигурация доступа для ролей (role)
+                        .requestMatchers("/role").permitAll()
+
+                        // Конфигурация доступа для клиентов (customer)
+                        .requestMatchers(HttpMethod.GET, "/customer").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/customer/{id}").hasAnyRole("MANAGER", "ANALYST")
+                        .requestMatchers(HttpMethod.POST, "/customer").hasRole("ADMIN")
+
+                        // Пример дополнительных эндпоинтов для управления заказами (order)
+                        .requestMatchers(HttpMethod.GET, "/order").hasAnyRole("MANAGER", "ANALYST", "OPERATOR")
+                        .requestMatchers(HttpMethod.POST, "/order").hasRole("OPERATOR")
+                        .requestMatchers(HttpMethod.PUT, "/order/{id}").hasRole("OPERATOR")
+                        .requestMatchers(HttpMethod.DELETE, "/order/{id}").hasRole("ADMIN")
                 )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())

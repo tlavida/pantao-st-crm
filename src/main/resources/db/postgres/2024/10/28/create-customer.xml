@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="Lavida" id="customer-01">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="customer"/>
+            </not>
+        </preConditions>
+        <createTable remarks="Покупатели" tableName="customer">
+            <column name="id" type="SERIAL" remarks="Идентификатор покупателя">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)" remarks="Имя покупателя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telephone" type="VARCHAR(12)" remarks="Номер телефона">
+            </column>
+            <column name="address" type="VARCHAR(1024)" remarks="Адрес"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Lavida" id="add-customer-01">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(1) FROM customer;</sqlCheck>
+        </preConditions>
+        <sql splitStatements="true">
+            INSERT INTO customer("name", telephone, address)
+            VALUES('Василий', '79491234567', 'ул. Ленина, 1');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

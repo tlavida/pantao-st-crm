@@ -13,7 +13,7 @@
             <column name="id" type="SERIAL" remarks="Идентификатор роли">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(10)" remarks="Название роли">
+            <column name="name" type="VARCHAR(20)" remarks="Название роли">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(1024)" remarks="Описание роли"/>

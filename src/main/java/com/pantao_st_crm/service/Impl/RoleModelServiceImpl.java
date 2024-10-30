@@ -1,9 +1,10 @@
-package com.pantao_st_crm.service;
+package com.pantao_st_crm.service.Impl;
 
 import com.pantao_st_crm.dto.RoleModelDTO;
 import com.pantao_st_crm.entity.RoleModel;
 import com.pantao_st_crm.exception.CustomEntityNotFoundException;
 import com.pantao_st_crm.repository.RoleModelRepository;
+import com.pantao_st_crm.service.RoleModelService;
 import com.pantao_st_crm.util.mapper.ToDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleModelServiceImpl implements RoleModelService{
+public class RoleModelServiceImpl implements RoleModelService {
     private final RoleModelRepository roleModelRepository;
 
     @Autowired

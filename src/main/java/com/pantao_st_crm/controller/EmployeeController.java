@@ -5,6 +5,7 @@ import com.pantao_st_crm.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +28,10 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO dto) {
-        // Сохраняем сотрудника через сервис
         EmployeeDTO createdEmployee = employeeService.save(dto);
-
-        // Возвращаем 201 Created и созданный объект в теле ответа
         return ResponseEntity
-                .status(HttpStatus.CREATED) // Устанавливаем статус 201 Created
-                .body(createdEmployee); // Возвращаем созданного сотрудника
+                .status(HttpStatus.CREATED)
+                .body(createdEmployee);
     }
 
     @PutMapping("/{id}")
